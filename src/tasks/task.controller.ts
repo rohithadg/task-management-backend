@@ -7,8 +7,8 @@ import createHttpError from 'http-errors';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
-  getAllTasks = async (_: Request, res: Response): Promise<void> => {
-    const tasks = await this.taskService.getAll();
+  getAllTasks = async (req: Request, res: Response): Promise<void> => {
+    const tasks = await this.taskService.getAll(req.paginationParams);
     res.json(tasks);
   };
 

@@ -7,6 +7,7 @@ import {
   ScanCommandInput,
   ScanCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
+import { DEFAULT_PAGE_SIZE, PaginatedRequest } from '../commons';
 
 interface PaginatedItems<T> {
   items: T[];
@@ -19,13 +20,12 @@ export class DynamoDbService {
   async paginatedScan<T extends Record<string, any>>(
     tableName: string,
     partitionKey: string = 'id',
-    limit: number = 10,
-    lastEvaluatedKey?: string,
+    options?: PaginatedRequest,
   ): Promise<PaginatedItems<T>> {
     const params: ScanCommandInput = {
       TableName: tableName,
-      Limit: limit,
-      ExclusiveStartKey: lastEvaluatedKey ? { [partitionKey]: lastEvaluatedKey } : undefined,
+      Limit: options?.limit || DEFAULT_PAGE_SIZE,
+      ExclusiveStartKey: options?.lastKey ? { [partitionKey]: options?.lastKey } : undefined,
     };
 
     const command = new ScanCommand(params);

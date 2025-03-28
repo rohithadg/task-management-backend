@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import { taskRoutes } from './tasks';
 import { notFoundHandler, defaultErrorHandler } from './middlewares';
+import { extractPaginationParams } from './middlewares';
 
 const app = express();
 
@@ -12,6 +13,7 @@ const stage = stageEnv ? `/${stageEnv}` : '';
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(extractPaginationParams);
 
 app.use(`${stage}/tasks`, taskRoutes);
 

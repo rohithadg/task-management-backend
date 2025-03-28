@@ -12,13 +12,3 @@ export interface Task {
   createdAt?: string;
   updatedAt?: string;
 }
-
-export interface PaginatedTasks {
-  tasks: Task[];
-  lastEvaluatedKey?: string;
-}
-
-export interface PaginatedRequest {
-  limit: number;
-  lastEvaluatedKey?: string;
-}

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { PaginatedTasks, Task, TaskStatus } from './task.interfaces';
+import { Task } from './task.interfaces';
+import { PaginatedRequest, PaginatedResponse } from '../commons';
 import { DynamoDbService } from '../aws';
 
 export class TaskService {
@@ -11,17 +12,16 @@ export class TaskService {
     this.taskPartitionKey = process.env.TASK_PARTITION_KEY || 'id';
   }
 
-  async getAll(limit?: number, lastEvaluatedKey?: string): Promise<PaginatedTasks> {
+  async getAll(options?: PaginatedRequest): Promise<PaginatedResponse<Task>> {
     const items = await this.dynamoDbService.paginatedScan<Task>(
       this.taskTable,
       this.taskPartitionKey,
-      limit,
-      lastEvaluatedKey,
+      options,
     );
 
     return {
-      tasks: items.items,
-      lastEvaluatedKey: items.lastEvaluatedKey?.[this.taskPartitionKey],
+      items: items.items,
+      lastKey: items.lastEvaluatedKey?.[this.taskPartitionKey],
     };
   }
 
